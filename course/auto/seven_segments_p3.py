@@ -1,22 +1,51 @@
 from math import *
+import numpy as np
 
-def HopfieldNetwork(pattern):
+def HopfieldNetworkLearn(patterns):
     print ("Hello world! \n")
 
-    weightMatrix = []
-    this_sum = 0;
-    for val_i in range(0,len(pattern)):
-        for val_j in range(0,len(pattern)):
-            if(val_i == val_j): continue;
-            this_sum += (pattern[val_i] * pattern[val_j])
+    numOfPatterns = len(patterns)
+    weightMatrix = np.empty([len(patterns[0])+1,len(patterns[0])+1])
 
-        this_sum = this_sum / len(pattern)
-        weightMatrix[val_i].append(this_sum)
-        this_sum = 0;
+    # Aim is loop through all i,j values
+    # Add up the pairs of all the numOfPatterns
+    # that results in the value for the weight matrix.
 
-    print(this_sum)
-    print(weightMatrix)
+    for i_val in range(0,len(patterns[0])):
+        for j_val in range(0,len(patterns[0])):
+            if(i_val == j_val):
+                weightMatrix[i_val,j_val] = 0
+            else:
+                this_sum = 0
+                for pattern in patterns:
+                    this_sum += pattern[i_val] * pattern[j_val]
+                weightMatrix[i_val,j_val] = this_sum / len(patterns)
 
+    # print(weightMatrix)
+
+    return weightMatrix
+
+def HopfieldNetworkApplied(weightMatrix, pattern):
+    haveChangedBool = True;
+    new_pattern = np.zeros(len(pattern));
+    numberOfIterations = 0
+    while(haveChangedBool): #until convergence
+        haveChangedBool = False;
+        for i_val in range(0,len(pattern)):
+            sum_val = 0
+            for j_val in range(0,len(pattern)):
+                sum_val += (weightMatrix[i_val,j_val] * pattern[j_val])
+            if(sum_val >0):
+                if(new_pattern[i_val] != 1): haveChangedBool = True;
+                new_pattern[i_val] = 1
+            else:
+                if(new_pattern[i_val] != -1): haveChangedBool = True;
+                new_pattern[i_val] = -1
+        pattern = np.copy(new_pattern)
+        seven_segment(pattern)
+        numberOfIterations +=1
+
+    print("Number of Iterations! : {0}".format(  numberOfIterations));
 
 
 def seven_segment(pattern):
@@ -77,22 +106,46 @@ seven_segment(three)
 seven_segment(six)
 seven_segment(one)
 
+patternsList = []
+patternsList.extend([six, three, one]);
 print("Hopfield Matrix! ")
-HopfieldNetwork(three)
+hop_weights = HopfieldNetworkLearn(patternsList)
 
 
+print("----------------------")
 print("test1")
-
+print("----------------------")
 test=[1,-1,1,1,-1,1,1,-1,-1,-1,-1]
+HopfieldNetworkApplied(hop_weights, test);
+print("----------------------")
 
-seven_segment(test)
+print("test1 Original")
+print("----------------------")
+test=[1,-1,1,1,-1,1,1,-1,-1,-1,-1]
+seven_segment(test);
+print("----------------------")
+
 
 print("test2")
-
-#here the network should run printing at each step
-
+print("----------------------")
 test=[1,1,1,1,1,1,1,-1,-1,-1,-1]
+HopfieldNetworkApplied(hop_weights, test);
+print("----------------------")
 
-seven_segment(test)
+print("test2 Original")
+print("----------------------")
+test=[1,1,1,1,1,1,1,-1,-1,-1,-1]
+seven_segment(test);
+print("----------------------")
+
+# print("test2")
+#
+# #here the network should run printing at each step
+#
+#
+# HopfieldNetworkApplied(hop_weights,test)
+#
+# print("Test 2 original")
+# seven_segment(test)
 
 #here the network should run printing at each step
