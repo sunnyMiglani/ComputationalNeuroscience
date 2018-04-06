@@ -21,15 +21,45 @@ def get_spike_train(rate,big_t,tau_ref):
     return spike_train
 
 
-def calculateFanoFactor(this_train, interval_size, intervals_list):
+def calculateFanoFactor(this_train, intervals_list):
     # Main aim is to find the std of the intervals, the mean of the intervals and follow
     # the formula for calculation of the fano factor.
     # c_v = variance / mean
 
     varianceOfIntervals = np.var(intervals_list)
     meanOfIntervals = np.mean(intervals_list);
-
     coefficientOfVariation = varianceOfIntervals / meanOfIntervals;
+
+    ms = 0.001
+    limOne = 10*ms
+    limTwo = 50*ms
+    limThree = 100*ms
+
+    listOne = []
+    listTwo = []
+    listThree = []
+
+    for ind in (range(0,len(intervals_list))):
+        val = intervals_list[ind];
+        if(val > 0 and val <= limOne ):
+            listOne.append(val)
+        elif(val > limOne and val <= limTwo):
+            listTwo.append(val)
+        elif(val > limTwo):
+            listThree.append(val)
+
+
+    coefficient_ofOnes = np.var(listOne) / np.mean(listOne)
+    coefficient_ofTwos = np.var(listTwo) / np.mean(listTwo)
+    coefficient_ofThrees = np.var(listThree) / np.mean(listThree)
+
+    fano_Ones = np.var(listOne)**2 / np.mean(listOne)
+    fano_Twos = np.var(listTwo)**2 / np.mean(listTwo)
+    fano_Threes = np.var(listThree)**2 / np.mean(listThree)
+
+    print("Window Size of 10ms : FanoFactor {0}\n Coefficient {1}".format(fano_Ones,coefficient_ofOnes));
+    print("Window Size of 50ms : FanoFactor {0}\n Coefficient {1}".format(fano_Twos,coefficient_ofTwos));
+    print("Window Size of 100ms : FanoFactor {0}\n Coefficient {1}".format(fano_Threes,coefficient_ofThrees));
 
 
 
@@ -77,7 +107,7 @@ def solveQuestionOne():
 
     # the spike train for firing rate 35hz, with time = 1000s in total, and a refectory period of 0.
     firstTrain = get_spike_train(fire_rate, time, refOne);
-    print (firstTrain);
+    # print (firstTrain);
     print("Length : {0}".format(len(firstTrain)));
 
     # Next steps is to calculate the fano factor of the spike count.
@@ -94,8 +124,17 @@ def solveQuestionOne():
     # Fano Factor is defined with the use of intervals.
     ## you divide the spike-train into intervals and work out the spike count for each interval.
     # First interval is 10ms.
+    calculateFanoFactor(firstTrain,intervals_list);
 
-    firstFanoFactor = calculateFanoFactor(firstTrain, wind_one, intervals_list);
+
+    # Now applying the same steps for part 2.
+    print("\n------Second spike_train values----------\n")
+    secondTrain = get_spike_train(fire_rate, time, refTwo); # using 5ms refectory period
+    print("Length: {0}".format(len(secondTrain)));
+    secondVar, intervals_list  = calculateVarianceOfIntervals(secondTrain, True);
+    print("Variance in intervals : {0}".format(secondVar));
+    calculateFanoFactor(secondTrain, intervals_list);
+
 
 
 
