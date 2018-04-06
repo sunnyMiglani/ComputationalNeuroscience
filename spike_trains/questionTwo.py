@@ -93,8 +93,6 @@ def findFanoFactor(spikes_binary):
 
 
 
-    return None
-
 
 
 #spikes=[int(x) for x in load_data("rho.dat")]
