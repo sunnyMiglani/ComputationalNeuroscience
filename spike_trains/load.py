@@ -12,6 +12,9 @@ spikes=load_data("rho.dat",int)
 print(len(spikes))
 print(spikes[0:5])
 
+
+
+
 #stimulus=[float(x) for x in load_data("stim.dat")]
 stimulus=load_data("stim.dat",float)
 
