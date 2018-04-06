@@ -40,8 +40,11 @@ def plotActivity(spikes,stimulus):
             thisAvgList = [];
 
 
-    plt.plot(range(0,len(avgs_list)), avgs_list);
-    plt.xlim(0,len(avgs_list) + 50);
+    plt.plot(range(0,len(avgs_list)), avgs_list, '-', color = "green");
+    plt.scatter(range(0,len(avgs_list)), avgs_list, s= 5, color = "green");
+    plt.title("Plotting the Neural Activity");
+
+    plt.legend();
     plt.show();
 
 
