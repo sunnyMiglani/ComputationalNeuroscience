@@ -1,19 +1,30 @@
-Length : 35203
-Variance in intervals : 0.0008077150197452076
-Window Size of 10ms : FanoFactor 1.4494261711156472e-08
- Coefficient 0.0017488657630316815
-Window Size of 50ms : FanoFactor 5.79196460831875e-07
- Coefficient 0.004774897711606425
-Window Size of 100ms : FanoFactor 8.270682555367102e-06
- Coefficient 0.010260173857520797
+
+------First spike_train values----------
+
+Length of spike train : 34903
+sum(listcount) : 34903, len(this_train) : 34903, len(listcount) : 100
+sum(listcount) : 29069, len(this_train) : 34903, len(listcount) : 20000
+sum(listcount) : 34578, len(this_train) : 34903, len(listcount) : 10000
+variance : 349.72909999999996, mean : 349.03 for listOne 
+Window Size of 10ms : FanoFactor 1.00200297968656
+
+Window Size of 50ms : FanoFactor 1.2129987942481684
+
+Window Size of 100ms : FanoFactor 1.0002947423217075
+
+Coefficient of Variance : 1.0031065071390768
 
 ------Second spike_train values----------
 
-Length: 35278
-Variance in intervals : 0.0005439097559143807
-Window Size of 10ms : FanoFactor 5.671096444455654e-10
- Coefficient 0.0002765965749086535
-Window Size of 50ms : FanoFactor 5.547126719679327e-07
- Coefficient 0.004741505668950178
-Window Size of 100ms : FanoFactor 4.130281026117772e-06
- Coefficient 0.0075060890288810534
+Length of spike train: 35119
+sum(listcount) : 35119, len(this_train) : 35119, len(listcount) : 100
+sum(listcount) : 31289, len(this_train) : 35119, len(listcount) : 19999
+sum(listcount) : 34957, len(this_train) : 35119, len(listcount) : 10000
+variance : 201.53389999999996, mean : 351.19 for listOne 
+Window Size of 10ms : FanoFactor 0.5738600187932457
+
+Window Size of 50ms : FanoFactor 0.818961178810962
+
+Window Size of 100ms : FanoFactor 0.6833485453557229
+
+Coefficient of Variance : 0.8215004151527823

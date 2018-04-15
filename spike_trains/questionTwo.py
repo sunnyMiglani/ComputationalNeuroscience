@@ -80,10 +80,11 @@ def findFanoFactor(spikes_binary):
     coefficient_ofThrees = np.var(listThree) / np.mean(listThree)
 
     ## Step 3: Calculatet he fanoFactor of these three windows again
+    ## Step 3 is WRONG
 
-    fano_Ones = np.var(listOne)**2 / np.mean(listOne)
-    fano_Twos = np.var(listTwo)**2 / np.mean(listTwo)
-    fano_Threes = np.var(listThree)**2 / np.mean(listThree)
+    fano_Ones = np.var(listOne)/ np.mean(listOne)
+    fano_Twos = np.var(listTwo) / np.mean(listTwo)
+    fano_Threes = np.var(listThree) / np.mean(listThree)
 
     ## Results :
 

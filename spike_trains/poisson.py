@@ -20,58 +20,71 @@ def get_spike_train(rate,big_t,tau_ref):
 
     return spike_train
 
+def fanoHelper(this_train, windowSize):
+    listCount = []
+    currentTime = windowSize;
+    currentCount = 0;
+
+    for spikeTime in this_train:
+        if (spikeTime > currenTime):
+            listCount.append(currentCount);
+            currentTime += windowSize;
+            if (spikeTime > currentTime):
+                currentCount = 0;
+            else:
+                currentCount = 1;
+        else:
+            currentCount += 1;
+    listCount.append(currentCount);
+    # print("sum(listcount) : {0}, len(this_train) : {1}, len(listcount) : {2}".format(sum(listCount), len(this_train), len(listCount)))
+    return listCount;
+
 
 def calculateFanoFactor(this_train, intervals_list):
     # Main aim is to find the std of the intervals, the mean of the intervals and follow
     # the formula for calculation of the fano factor.
     # c_v = variance / mean
 
-    varianceOfIntervals = np.var(intervals_list)
+    varianceOfIntervals = np.std(intervals_list)
     meanOfIntervals = np.mean(intervals_list);
+
     coefficientOfVariation = varianceOfIntervals / meanOfIntervals;
 
-    ms = 0.001
-    limOne = 10*ms
-    limTwo = 50*ms
-    limThree = 100*ms
+    ms = 0.001;
 
-    listOne = []
-    listTwo = []
-    listThree = []
+    listOneCount   = fanoHelper(this_train, 10); ## ----------- THIS IS IN SECONDS, MUST BE IN MILLISECONDS ---------------------- ##
+    listTwoCount   = fanoHelper(this_train, 50*ms);
+    listThreeCount = fanoHelper(this_train, 100*ms);
 
-    for ind in (range(0,len(intervals_list))):
-        val = intervals_list[ind];
-        if(val > 0 and val <= limOne ):
-            listOne.append(val)
-        elif(val > limOne and val <= limTwo):
-            listTwo.append(val)
-        elif(val > limTwo):
-            listThree.append(val)
+    print ("variance : {0}, mean : {1} for listOne ".format(np.var(listOneCount), np.mean(listOneCount)))
+
+    fano_Ones = (np.var(listOneCount)) / np.mean(listOneCount)
+    fano_Twos = (np.var(listTwoCount)) / np.mean(listTwoCount)
+    fano_Threes = (np.var(listThreeCount)) / np.mean(listThreeCount)
+
+# shahla.perween@edfenergy.com 
 
 
-    coefficient_ofOnes = np.var(listOne) / np.mean(listOne)
-    coefficient_ofTwos = np.var(listTwo) / np.mean(listTwo)
-    coefficient_ofThrees = np.var(listThree) / np.mean(listThree)
+    print("Window Size of 10ms : FanoFactor {0}\n".format(fano_Ones));
+    print("Window Size of 50ms : FanoFactor {0}\n".format(fano_Twos));
+    print("Window Size of 100ms : FanoFactor {0}\n".format(fano_Threes));
 
-    fano_Ones = np.var(listOne)**2 / np.mean(listOne)
-    fano_Twos = np.var(listTwo)**2 / np.mean(listTwo)
-    fano_Threes = np.var(listThree)**2 / np.mean(listThree)
-
-    print("Window Size of 10ms : FanoFactor {0}\n Coefficient {1}".format(fano_Ones,coefficient_ofOnes));
-    print("Window Size of 50ms : FanoFactor {0}\n Coefficient {1}".format(fano_Twos,coefficient_ofTwos));
-    print("Window Size of 100ms : FanoFactor {0}\n Coefficient {1}".format(fano_Threes,coefficient_ofThrees));
+    print("Coefficient of Variance : {0}".format(coefficientOfVariation));
 
 
-
+#######################################################################
+ # This function takes the difference in the runtimes of the spike trains
+ # and therefore calculates the intervals
+#######################################################################
 def calculateVarianceOfIntervals(this_train, shouldReturnIntervals=False):
     len_train = len(this_train);
     list_intervals = []
     for ind in range(0,len_train -1):
-        a_val = this_train[ind];
+        a_val = this_train[ind]; # take two spikes and find the difference
         b_val = this_train[ind+1];
-        list_intervals.append( b_val-a_val );
+        list_intervals.append( b_val - a_val ); # difference = interval between spikes.
 
-    varianceOfIntervals = np.var(list_intervals);
+    varianceOfIntervals = np.var(list_intervals); ## calculates the variance of the intervals
     if(shouldReturnIntervals):
         return varianceOfIntervals, list_intervals;
 
@@ -91,24 +104,23 @@ def calculateVarianceOfIntervals(this_train, shouldReturnIntervals=False):
 #####################
 
 def solveQuestionOne():
+    sec = 1.0;
+    Hz = 1.0;
     #1000 seconds of spike
-    time = 1000;
+    time = 1000*sec;
     #firing rate of 35hz
-    fire_rate = 35;
+    fire_rate = 35 * Hz;
     # refractory period of 0ms and 5ms
     ms = 0.001;
-    refOne = 0;
+    refOne = 0*ms;
     refTwo = 5*ms;
 
-    # Windows of 10, 50 and 100 ms
-    wind_one = 10*ms;
-    wind_two = 50*ms;
-    wind_three = 100*ms;
 
+    print("\n------First spike_train values----------\n")
     # the spike train for firing rate 35hz, with time = 1000s in total, and a refectory period of 0.
     firstTrain = get_spike_train(fire_rate, time, refOne);
     # print (firstTrain);
-    print("Length : {0}".format(len(firstTrain)));
+    print("Length of spike train : {0}".format(len(firstTrain)));
 
     # Next steps is to calculate the fano factor of the spike count.
     # and the variation of the inter-spike interval.
@@ -118,21 +130,16 @@ def solveQuestionOne():
     ## saving this difference in a new list, and use numpy to calculate the
     ## variance of that list.
     firstVar, intervals_list  = calculateVarianceOfIntervals(firstTrain, True);
-    print("Variance in intervals : {0}".format(firstVar));
 
     # Calculating the Fano Factor of the spike count.
-    # Fano Factor is defined with the use of intervals.
-    ## you divide the spike-train into intervals and work out the spike count for each interval.
-    # First interval is 10ms.
     calculateFanoFactor(firstTrain,intervals_list);
 
 
     # Now applying the same steps for part 2.
     print("\n------Second spike_train values----------\n")
     secondTrain = get_spike_train(fire_rate, time, refTwo); # using 5ms refectory period
-    print("Length: {0}".format(len(secondTrain)));
+    print("Length of spike train: {0}".format(len(secondTrain)));
     secondVar, intervals_list  = calculateVarianceOfIntervals(secondTrain, True);
-    print("Variance in intervals : {0}".format(secondVar));
     calculateFanoFactor(secondTrain, intervals_list);
 
 

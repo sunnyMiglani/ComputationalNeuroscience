@@ -28,7 +28,7 @@ def plotActivity(spikes,stimulus):
     avgs_list = []
     thisAvgList = []
     for ind in range(0,len(spikes)): # for each spike, check if it's valid and add to mean
-        this_spike = spikes[ind];
+        this_spike = spikes[ind]; # Check if the spike occured
         counter+=1;
         if(this_spike == 1):
             thisAvgList.append(stimulus[ind]);
