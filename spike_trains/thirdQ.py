@@ -27,6 +27,20 @@ def plotActivity(spikes,stimulus):
     counter = 0;
     avgs_list = []
     thisAvgList = []
+
+    total = 0
+
+    for timeOffset in range(0, 100ms):
+        for i in range(len(spikes)):
+            if spikes[i]:
+                if i - timeOffset > 0:
+                    total += stimulus[i - timeOffset]
+        total /=
+
+
+
+
+
     for ind in range(0,len(spikes)): # for each spike, check if it's valid and add to mean
         this_spike = spikes[ind]; # Check if the spike occured
         counter+=1;

@@ -26,13 +26,14 @@ def fanoHelper(this_train, windowSize):
     currentCount = 0;
 
     for spikeTime in this_train:
-        if (spikeTime > currenTime):
+        if (spikeTime > currentTime):
             listCount.append(currentCount);
             currentTime += windowSize;
-            if (spikeTime > currentTime):
-                currentCount = 0;
-            else:
-                currentCount = 1;
+            while (spikeTime > currentTime):
+                listCount.append(0)
+                currentTime += windowSize;
+            currentCount = 1;
+
         else:
             currentCount += 1;
     listCount.append(currentCount);
@@ -52,7 +53,7 @@ def calculateFanoFactor(this_train, intervals_list):
 
     ms = 0.001;
 
-    listOneCount   = fanoHelper(this_train, 10); ## ----------- THIS IS IN SECONDS, MUST BE IN MILLISECONDS ---------------------- ##
+    listOneCount   = fanoHelper(this_train, 10*ms); ## ----------- THIS IS IN SECONDS, MUST BE IN MILLISECONDS ---------------------- ##
     listTwoCount   = fanoHelper(this_train, 50*ms);
     listThreeCount = fanoHelper(this_train, 100*ms);
 
@@ -62,7 +63,7 @@ def calculateFanoFactor(this_train, intervals_list):
     fano_Twos = (np.var(listTwoCount)) / np.mean(listTwoCount)
     fano_Threes = (np.var(listThreeCount)) / np.mean(listThreeCount)
 
-# shahla.perween@edfenergy.com 
+# shahla.perween@edfenergy.com
 
 
     print("Window Size of 10ms : FanoFactor {0}\n".format(fano_Ones));
