@@ -6,52 +6,62 @@ def load_data(filename,T):
 
     return data_array
 
-
-# ######## Steps ##############
-#
-#  Step for finding the fano factor,
-#  first step is to take the fact that it comes in the function as binary which
-#  means that we must create the list of the time intervals between each spike
-#
-#  This can be done quite simply, by taking the fact that we know it's a 2
-#  ms gap between the values, which means we just see when the next 1 shows up
-#  and multiply the number of 0s in between to see how many MS b/w them.
-#
-#  Once we've done that, we can simply use the same fanofactor formulae to
-#  get the values we want
-#
-#  #############################
-
-def getTimeIntervals(binary_list):
+def getTimeIntervalsFromIndex(binary_list):
     listOfTimeIntervals = []
     ms = 0.001;
     time_dif = 2*ms;
-    counter_mid = 0;
-    found = False;
     for ind in range(0,len(binary_list)):
-        this_val = binary_list[ind];
-        if(this_val == 1):
-            new_val = 0
-            while(new_val != 1 and ind+1 < len(binary_list)):
-                counter_mid+=1; # increment distance between indices.
-                ind+=1; # increment the counter
-                new_val = binary_list[ind]
-                found = True;
-            if(found):
-                listOfTimeIntervals.append(time_dif * counter_mid);
-                # print("Found a value! the number of mids : {0}".format(counter_mid));
-                counter_mid = 0;
-                found = False;
+        if(binary_list[ind] == 1):
+            listOfTimeIntervals.append((ind) * time_dif);
 
-    if(len(listOfTimeIntervals) == 0): print("Problem! There is something wrong\
-    in the time interval checks");
     return listOfTimeIntervals;
+
+
+# def calculateCoefficient(binary_train):
+#     for ind in range(0,len(binary_train)):
+
+
+def calculateVarianceOfIntervals(this_train, shouldReturnIntervals=False):
+    len_train = len(this_train);
+    list_intervals = []
+    for ind in range(0,len_train -1):
+        a_val = this_train[ind]; # take two spikes and find the difference
+        b_val = this_train[ind+1];
+        list_intervals.append( b_val - a_val ); # difference = interval between spikes.
+
+    varianceOfIntervals = np.var(list_intervals); ## calculates the variance of the intervals
+    if(shouldReturnIntervals):
+        return varianceOfIntervals, list_intervals;
+
+    return varianceOfIntervals
+
+def fanoHelper(this_train, windowSize):
+
+    listCount = []
+    currentTime = windowSize;
+    currentCount = 0;
+
+    for spikeTime in this_train:
+        if (spikeTime > currentTime):
+            listCount.append(currentCount);
+            currentTime += windowSize;
+            while (spikeTime > currentTime):
+                listCount.append(0)
+                currentTime += windowSize;
+            currentCount = 1;
+
+        else:
+            currentCount += 1;
+    listCount.append(currentCount);
+    # print("sum(listcount) : {0}, len(this_train) : {1}, len(listcount) : {2}".format(sum(listCount), len(this_train), len(listCount)))
+    return listCount;
 
 
 def findFanoFactor(spikes_binary):
     # First get the list of time intervals
-    time_intervals = getTimeIntervals(spikes_binary)
+    time_intervals = getTimeIntervalsFromIndex(spikes_binary)
     # Now we follow the steps on finding the fino factor
+
 
 
     ## Step 1: Split into the three main window sizes
@@ -60,38 +70,33 @@ def findFanoFactor(spikes_binary):
     limTwo = 50*ms
     limThree = 100*ms
 
-    listOne = []
-    listTwo = []
-    listThree = []
+    listOneCount = fanoHelper(time_intervals, limOne);
+    listTwoCount = fanoHelper(time_intervals, limTwo);
+    listThreeCount = fanoHelper(time_intervals, limThree);
 
-    for ind in (range(0,len(time_intervals))):
-        val = time_intervals[ind];
-        if(val > 0 and val <= limOne ):
-            listOne.append(val)
-        elif(val > limOne and val <= limTwo):
-            listTwo.append(val)
-        elif(val > limTwo):
-            listThree.append(val)
+    _ , listOne  = calculateVarianceOfIntervals(time_intervals,True);
+
+    # calculateCoefficient(spikes_binary);
+
 
     ## Step 2: Now calculate the coefficient of each of these windows
 
-    coefficient_ofOnes = np.var(listOne) / np.mean(listOne)
-    coefficient_ofTwos = np.var(listTwo) / np.mean(listTwo)
-    coefficient_ofThrees = np.var(listThree) / np.mean(listThree)
+    coefficient_ofOnes = np.std(listOne) / np.mean(listOne)
 
     ## Step 3: Calculatet he fanoFactor of these three windows again
     ## Step 3 is WRONG
 
-    fano_Ones = np.var(listOne)/ np.mean(listOne)
-    fano_Twos = np.var(listTwo) / np.mean(listTwo)
-    fano_Threes = np.var(listThree) / np.mean(listThree)
+    fano_Ones = np.var(listOneCount)/ np.mean(listOneCount)
+    fano_Twos = np.var(listTwoCount) / np.mean(listTwoCount)
+    fano_Threes = np.var(listThreeCount) / np.mean(listThreeCount)
 
     ## Results :
 
-    print("Window Size of 10ms : FanoFactor {0}\n Coefficient {1}".format(fano_Ones,coefficient_ofOnes));
-    print("Window Size of 50ms : FanoFactor {0}\n Coefficient {1}".format(fano_Twos,coefficient_ofTwos));
-    print("Window Size of 100ms : FanoFactor {0}\n Coefficient {1}".format(fano_Threes,coefficient_ofThrees));
+    print("Window Size of 10ms : FanoFactor {0}\n".format(fano_Ones));
+    print("Window Size of 50ms : FanoFactor {0}\n".format(fano_Twos));
+    print("Window Size of 100ms : FanoFactor {0}\n".format(fano_Threes));
 
+    print("Coefficient of variation : {0}\n".format(coefficient_ofOnes));
 
 
 
@@ -99,7 +104,6 @@ def findFanoFactor(spikes_binary):
 #spikes=[int(x) for x in load_data("rho.dat")]
 spikes=load_data("rho.dat",int)
 
-print(len(spikes))
-print(spikes[0:100])
+# print(spikes[0:100])
 
 findFanoFactor(spikes);

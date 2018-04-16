@@ -41,7 +41,7 @@ def fanoHelper(this_train, windowSize):
     return listCount;
 
 
-def calculateFanoFactor(this_train, intervals_list):
+def calculateFanoFactor(this_train, intervals_list, refPeriod):
     # Main aim is to find the std of the intervals, the mean of the intervals and follow
     # the formula for calculation of the fano factor.
     # c_v = variance / mean
@@ -53,11 +53,11 @@ def calculateFanoFactor(this_train, intervals_list):
 
     ms = 0.001;
 
-    listOneCount   = fanoHelper(this_train, 10*ms); ## ----------- THIS IS IN SECONDS, MUST BE IN MILLISECONDS ---------------------- ##
+    listOneCount   = fanoHelper(this_train, 10*ms);
     listTwoCount   = fanoHelper(this_train, 50*ms);
     listThreeCount = fanoHelper(this_train, 100*ms);
 
-    print ("variance : {0}, mean : {1} for listOne ".format(np.var(listOneCount), np.mean(listOneCount)))
+    # print ("variance : {0}, mean : {1} for listOne ".format(np.var(listOneCount), np.mean(listOneCount)))
 
     fano_Ones = (np.var(listOneCount)) / np.mean(listOneCount)
     fano_Twos = (np.var(listTwoCount)) / np.mean(listTwoCount)
@@ -66,11 +66,11 @@ def calculateFanoFactor(this_train, intervals_list):
 # shahla.perween@edfenergy.com
 
 
-    print("Window Size of 10ms : FanoFactor {0}\n".format(fano_Ones));
-    print("Window Size of 50ms : FanoFactor {0}\n".format(fano_Twos));
-    print("Window Size of 100ms : FanoFactor {0}\n".format(fano_Threes));
+    print("Window Size of 10ms : FanoFactor {0} with refectory period {1}\n".format(fano_Ones, refPeriod * (1/ms)));
+    print("Window Size of 50ms : FanoFactor {0} with refectory period {1}\n".format(fano_Twos,refPeriod * (1/ms)));
+    print("Window Size of 100ms : FanoFactor {0} with refectory period {1}\n".format(fano_Threes,refPeriod * (1/ms)));
 
-    print("Coefficient of Variance : {0}".format(coefficientOfVariation));
+    print("Coefficient of Variation : {0}".format(coefficientOfVariation));
 
 
 #######################################################################
@@ -117,7 +117,7 @@ def solveQuestionOne():
     refTwo = 5*ms;
 
 
-    print("\n------First spike_train values----------\n")
+    print("\n------Spike Train Values with refractory period 0ms----------\n")
     # the spike train for firing rate 35hz, with time = 1000s in total, and a refectory period of 0.
     firstTrain = get_spike_train(fire_rate, time, refOne);
     # print (firstTrain);
@@ -133,15 +133,15 @@ def solveQuestionOne():
     firstVar, intervals_list  = calculateVarianceOfIntervals(firstTrain, True);
 
     # Calculating the Fano Factor of the spike count.
-    calculateFanoFactor(firstTrain,intervals_list);
+    calculateFanoFactor(firstTrain,intervals_list, refOne);
 
 
     # Now applying the same steps for part 2.
-    print("\n------Second spike_train values----------\n")
+    print("\n------Spike Train Values with refractory period 5ms----------\n")
     secondTrain = get_spike_train(fire_rate, time, refTwo); # using 5ms refectory period
     print("Length of spike train: {0}".format(len(secondTrain)));
     secondVar, intervals_list  = calculateVarianceOfIntervals(secondTrain, True);
-    calculateFanoFactor(secondTrain, intervals_list);
+    calculateFanoFactor(secondTrain, intervals_list, refTwo);
 
 
 

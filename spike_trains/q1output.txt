@@ -1,30 +1,22 @@
 
-------First spike_train values----------
+------Spike Train Values with refractory period 0ms----------
 
-Length of spike train : 34903
-sum(listcount) : 34903, len(this_train) : 34903, len(listcount) : 100
-sum(listcount) : 29069, len(this_train) : 34903, len(listcount) : 20000
-sum(listcount) : 34578, len(this_train) : 34903, len(listcount) : 10000
-variance : 349.72909999999996, mean : 349.03 for listOne 
-Window Size of 10ms : FanoFactor 1.00200297968656
+Length of spike train : 34881
+Window Size of 10ms : FanoFactor 0.9983824000156059 with refectory period 0.0
 
-Window Size of 50ms : FanoFactor 1.2129987942481684
+Window Size of 50ms : FanoFactor 0.9954046019549921 with refectory period 0.0
 
-Window Size of 100ms : FanoFactor 1.0002947423217075
+Window Size of 100ms : FanoFactor 0.9915545953838527 with refectory period 0.0
 
-Coefficient of Variance : 1.0031065071390768
+Coefficient of Variation : 1.0014009308499414
 
-------Second spike_train values----------
+------Spike Train Values with refractory period 5ms----------
 
-Length of spike train: 35119
-sum(listcount) : 35119, len(this_train) : 35119, len(listcount) : 100
-sum(listcount) : 31289, len(this_train) : 35119, len(listcount) : 19999
-sum(listcount) : 34957, len(this_train) : 35119, len(listcount) : 10000
-variance : 201.53389999999996, mean : 351.19 for listOne 
-Window Size of 10ms : FanoFactor 0.5738600187932457
+Length of spike train: 34996
+Window Size of 10ms : FanoFactor 0.7467332657096146 with refectory period 5.0
 
-Window Size of 50ms : FanoFactor 0.818961178810962
+Window Size of 50ms : FanoFactor 0.696536724197051 with refectory period 5.0
 
-Window Size of 100ms : FanoFactor 0.6833485453557229
+Window Size of 100ms : FanoFactor 0.6984797805463482 with refectory period 5.0
 
-Coefficient of Variance : 0.8215004151527823
+Coefficient of Variation : 0.8255115511032515
