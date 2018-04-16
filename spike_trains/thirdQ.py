@@ -9,57 +9,39 @@ def load_data(filename,T):
 
 
 
-# ##### Steps for getting data to plot ############
-# Basically loop through the list, 50 at a time
-# anytime you see a one, take the corresponding value
-# and average it
-# Once the averages are over through the list
-# that's the values needed to plot for the program
-# ##################################################
+def calc(spikes,stimulus,windowSize):
+    ms = 0.001;
+    reverseInd = int(windowSize / (2*ms));
+    stim = []
+
+    for spike_ind in range(0,len(spikes)):
+        spike = spikes[spike_ind];
+        if(spike == 1):
+            stim.append(stimulus[spike_ind - reverseInd]);
+
+    return np.mean(stim);
+
+
 
 def plotActivity(spikes,stimulus):
-    ms = 0.001
+    ms = 0.001;
     time = 100*ms
     timeIntervals = 2*ms;
 
-    numNeededForAvg = time / timeIntervals;
+    avgs = []
+    rangeOfTimes = np.arange(0*ms, 102*ms, 2*ms);
+    for time in rangeOfTimes:
+        t_avg = calc(spikes,stimulus,time);
+        avgs.append(t_avg);
 
-    counter = 0;
-    avgs_list = []
-    thisAvgList = []
-
-    total = 0
-
-    for timeOffset in range(0, 100ms):
-        for i in range(len(spikes)):
-            if spikes[i]:
-                if i - timeOffset > 0:
-                    total += stimulus[i - timeOffset]
-        total /=
-
-
-
-
-
-    for ind in range(0,len(spikes)): # for each spike, check if it's valid and add to mean
-        this_spike = spikes[ind]; # Check if the spike occured
-        counter+=1;
-        if(this_spike == 1):
-            thisAvgList.append(stimulus[ind]);
-        if(counter >= numNeededForAvg):
-            # print("Reset at {0}".format(ind));
-            meanVal = np.mean(thisAvgList)
-            counter = 0;
-            avgs_list.append(meanVal);
-            thisAvgList = [];
-
-
-    plt.plot(range(0,len(avgs_list)), avgs_list, '-', color = "green");
-    plt.scatter(range(0,len(avgs_list)), avgs_list, s= 5, color = "green");
+    plt.plot(rangeOfTimes, avgs);
+    plt.scatter(rangeOfTimes, avgs, s= 7, color = "green");
+    plt.xlabel('Time Intervals');
+    plt.ylabel('Average Stimulus Value');
     plt.title("Plotting the Neural Activity");
 
-    plt.legend();
     plt.show();
+
 
 
 
@@ -69,5 +51,4 @@ spikes=load_data("rho.dat",int)
 #stimulus=[float(x) for x in load_data("stim.dat")]
 stimulus=load_data("stim.dat",float)
 
-print("hello");
 plotActivity(spikes,stimulus);

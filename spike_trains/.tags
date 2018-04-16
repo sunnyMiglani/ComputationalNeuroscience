@@ -1,0 +1,5 @@
+load_data	/home/sun/Documents/third_year/neuro/coursework/spike_trains/thirdQ.py	/^def load_data(filename,T):$/;"	function	line:4
+calc	/home/sun/Documents/third_year/neuro/coursework/spike_trains/thirdQ.py	/^def calc(spikes,stimulus,windowSize):$/;"	function	line:12
+plotActivity	/home/sun/Documents/third_year/neuro/coursework/spike_trains/thirdQ.py	/^def plotActivity(spikes,stimulus):$/;"	function	line:26
+spikes	/home/sun/Documents/third_year/neuro/coursework/spike_trains/thirdQ.py	/^spikes=load_data("rho.dat",int)$/;"	variable	line:44
+stimulus	/home/sun/Documents/third_year/neuro/coursework/spike_trains/thirdQ.py	/^stimulus=load_data("stim.dat",float)$/;"	variable	line:47

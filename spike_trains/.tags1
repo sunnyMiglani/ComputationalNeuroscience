@@ -1,0 +1,11 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	0	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+load_data	/home/sun/Documents/third_year/neuro/coursework/spike_trains/thirdQ.py	/^def load_data(filename,T):$/;"	function	line:4
+calc	/home/sun/Documents/third_year/neuro/coursework/spike_trains/thirdQ.py	/^def calc(spikes,stimulus,windowSize):$/;"	function	line:12
+plotActivity	/home/sun/Documents/third_year/neuro/coursework/spike_trains/thirdQ.py	/^def plotActivity(spikes,stimulus):$/;"	function	line:26
+spikes	/home/sun/Documents/third_year/neuro/coursework/spike_trains/thirdQ.py	/^spikes=load_data("rho.dat",int)$/;"	variable	line:44
+stimulus	/home/sun/Documents/third_year/neuro/coursework/spike_trains/thirdQ.py	/^stimulus=load_data("stim.dat",float)$/;"	variable	line:47

@@ -17,10 +17,6 @@ def getTimeIntervalsFromIndex(binary_list):
     return listOfTimeIntervals;
 
 
-# def calculateCoefficient(binary_train):
-#     for ind in range(0,len(binary_train)):
-
-
 def calculateVarianceOfIntervals(this_train, shouldReturnIntervals=False):
     len_train = len(this_train);
     list_intervals = []
@@ -53,7 +49,6 @@ def fanoHelper(this_train, windowSize):
         else:
             currentCount += 1;
     listCount.append(currentCount);
-    # print("sum(listcount) : {0}, len(this_train) : {1}, len(listcount) : {2}".format(sum(listCount), len(this_train), len(listCount)))
     return listCount;
 
 
@@ -76,7 +71,6 @@ def findFanoFactor(spikes_binary):
 
     _ , listOne  = calculateVarianceOfIntervals(time_intervals,True);
 
-    # calculateCoefficient(spikes_binary);
 
 
     ## Step 2: Now calculate the coefficient of each of these windows
@@ -84,7 +78,6 @@ def findFanoFactor(spikes_binary):
     coefficient_ofOnes = np.std(listOne) / np.mean(listOne)
 
     ## Step 3: Calculatet he fanoFactor of these three windows again
-    ## Step 3 is WRONG
 
     fano_Ones = np.var(listOneCount)/ np.mean(listOneCount)
     fano_Twos = np.var(listTwoCount) / np.mean(listTwoCount)

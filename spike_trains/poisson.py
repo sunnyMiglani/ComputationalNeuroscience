@@ -37,13 +37,11 @@ def fanoHelper(this_train, windowSize):
         else:
             currentCount += 1;
     listCount.append(currentCount);
-    # print("sum(listcount) : {0}, len(this_train) : {1}, len(listcount) : {2}".format(sum(listCount), len(this_train), len(listCount)))
     return listCount;
 
 
 def calculateFanoFactor(this_train, intervals_list, refPeriod):
-    # Main aim is to find the std of the intervals, the mean of the intervals and follow
-    # the formula for calculation of the fano factor.
+    # Main aim is to find the std of the intervals, the mean of the intervals
     # c_v = variance / mean
 
     varianceOfIntervals = np.std(intervals_list)
@@ -57,13 +55,11 @@ def calculateFanoFactor(this_train, intervals_list, refPeriod):
     listTwoCount   = fanoHelper(this_train, 50*ms);
     listThreeCount = fanoHelper(this_train, 100*ms);
 
-    # print ("variance : {0}, mean : {1} for listOne ".format(np.var(listOneCount), np.mean(listOneCount)))
 
     fano_Ones = (np.var(listOneCount)) / np.mean(listOneCount)
     fano_Twos = (np.var(listTwoCount)) / np.mean(listTwoCount)
     fano_Threes = (np.var(listThreeCount)) / np.mean(listThreeCount)
 
-# shahla.perween@edfenergy.com
 
 
     print("Window Size of 10ms : FanoFactor {0} with refectory period {1}\n".format(fano_Ones, refPeriod * (1/ms)));
@@ -126,17 +122,12 @@ def solveQuestionOne():
     # Next steps is to calculate the fano factor of the spike count.
     # and the variation of the inter-spike interval.
 
-    # calculating a variation, is as simple as taking the list
-    # then calculating the difference between each value
-    ## saving this difference in a new list, and use numpy to calculate the
-    ## variance of that list.
+
     firstVar, intervals_list  = calculateVarianceOfIntervals(firstTrain, True);
 
-    # Calculating the Fano Factor of the spike count.
     calculateFanoFactor(firstTrain,intervals_list, refOne);
 
 
-    # Now applying the same steps for part 2.
     print("\n------Spike Train Values with refractory period 5ms----------\n")
     secondTrain = get_spike_train(fire_rate, time, refTwo); # using 5ms refectory period
     print("Length of spike train: {0}".format(len(secondTrain)));
