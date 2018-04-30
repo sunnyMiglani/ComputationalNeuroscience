@@ -29,7 +29,7 @@ def getGsValue(timeConstant, s_val,):
 
     return this_sval;
 
-def neuronLoops(E_s_Val):
+def neuronLoops(E_s_Val,whichSet):
     timeConstant = 10 * ms;
     E_l = -70 * mV;
     resetVoltage = -70 * mV;
@@ -89,13 +89,13 @@ def neuronLoops(E_s_Val):
         neuronA_sval = neuronA_sval;
         neuronB_sval = neuronB_sval;
 
-    plt.plot(range(0,numberOfSteps),neuronA_listOfVoltages,'g');
-    plt.plot(range(0,numberOfSteps),neuronB_listOfVoltages,'r');
-    plt.title("Plot of Voltage against time.");
+    plt.plot(range(0,numberOfSteps),neuronA_listOfVoltages,'g', label = 'Neuron A');
+    plt.plot(range(0,numberOfSteps),neuronB_listOfVoltages,'r', label = 'Neuron B');
+    plt.title("Plot of Voltage against time for {0}".format(whichSet));
     plt.xlabel("Timesteps (ms)");
     plt.ylabel("Voltage (mV)");
     plt.show();
 
 
-neuronLoops(0);
-neuronLoops(-80);
+neuronLoops(0, "inhibitory");
+neuronLoops(-80, "excitory");
