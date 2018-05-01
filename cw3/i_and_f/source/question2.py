@@ -18,8 +18,8 @@ E_l - V + Rm*I
 Eₗ - Vₐ + Rₘ * Iₑ + gₛ * (Eₛ - Vₐ)
 
 '''
-def rhs_IandF(timeConstant, E_l, Voltage, R_m, I, g_s, E_s):
-    value = E_l - Voltage + (R_m*I) + (g_s * (E_s - Voltage));
+def rhs_IandF(timeConstant, E_l, Voltage, R_mIe, g_s, E_s):
+    value = E_l - Voltage + (R_mIe) + (g_s * (E_s - Voltage));
     value = value/timeConstant;
     return value;
 
@@ -30,11 +30,11 @@ def getGsValue(timeConstant, s_val,):
     return this_sval;
 
 def neuronLoops(E_s_Val,whichSet):
-    timeConstant = 10 * ms;
+    timeConstant = 20 * ms;
     E_l = -70 * mV;
-    resetVoltage = -70 * mV;
-    thresholdVoltage = -40 * mV;
-    R_m = 10 * MOhm;
+    resetVoltage = -80 * mV;
+    thresholdVoltage = -54 * mV;
+    R_mIe = 18 * mV;
     InputCurrent = 3.1 * nA;
     timesteps = 1 * ms;
 
@@ -66,10 +66,10 @@ def neuronLoops(E_s_Val,whichSet):
         if(neuronA_sval == math.inf): break;
 
         neuronA_sval = neuronA_sval + (timesteps *  getGsValue(timesteps,neuronA_sval));
-        neuronB_sval = neuronB_sval + (timesteps *  getGsValue(timesteps,neuronB_sval))
+        neuronB_sval = neuronB_sval + (timesteps *  getGsValue(timesteps,neuronB_sval));
 
 
-        neuronA_v_1 = neuronA_v_0  + (timesteps * rhs_IandF(timeConstant, E_l, neuronA_v_0, R_m, InputCurrent, neuronA_sval, E_s));
+        neuronA_v_1 = neuronA_v_0  + (timesteps * rhs_IandF(timeConstant, E_l, neuronA_v_0, R_mIe, neuronA_sval, E_s));
         print ("neuronA_v_1 : {0}".format(neuronA_v_1));
         if(neuronA_v_1  > thresholdVoltage):
             neuronA_v_1 = resetVoltage;
@@ -77,7 +77,7 @@ def neuronLoops(E_s_Val,whichSet):
 
         neuronA_listOfVoltages.append(neuronA_v_1);
 
-        neuronB_v_1 = neuronB_v_0 + (timesteps * rhs_IandF(timeConstant, E_l, neuronB_v_0, R_m, InputCurrent, neuronB_sval, E_s));
+        neuronB_v_1 = neuronB_v_0 + (timesteps * rhs_IandF(timeConstant, E_l, neuronB_v_0, R_mIe, neuronB_sval, E_s));
         if(neuronB_v_1  > thresholdVoltage):
             neuronB_v_1 = resetVoltage;
             neuronA_sval += P;
@@ -89,13 +89,17 @@ def neuronLoops(E_s_Val,whichSet):
         neuronA_sval = neuronA_sval;
         neuronB_sval = neuronB_sval;
 
+    plt.figure();
     plt.plot(range(0,numberOfSteps),neuronA_listOfVoltages,'g', label = 'Neuron A');
     plt.plot(range(0,numberOfSteps),neuronB_listOfVoltages,'r', label = 'Neuron B');
+    plt.plot(range(0,numberOfSteps), [thresholdVoltage]*(numberOfSteps),'--', label="Threshold voltage");
     plt.title("Plot of Voltage against time for {0}".format(whichSet));
     plt.xlabel("Timesteps (ms)");
     plt.ylabel("Voltage (mV)");
-    plt.show();
+    plt.legend();
+    plt.savefig("q2_{0}".format(whichSet));
+    # plt.show();
 
 
-neuronLoops(0, "inhibitory");
-neuronLoops(-80, "excitory");
+neuronLoops(-80, "inhibitory");
+neuronLoops(0, "excitatory");
